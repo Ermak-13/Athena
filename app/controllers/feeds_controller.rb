@@ -4,20 +4,21 @@ class FeedsController < ApplicationController
   end
 
   def create
-    feed_url = params[:feed][:url]
-    feed = Feedzirra::Feed.fetch_and_parse(feed_url)
+    feed = Feed.create feed_params
 
-    if feed.present?
-      Feed.create(
-        url: feed_url,
-        title: feed.title || params.permit(:title),
-        description: feed.description || params.permit(:description),
-      )
+    if feed.valid?
+      feed.fetch_attributes!
 
-      redirect_to :index
+      flash[:notice] = 'Feed was created!'
+      redirect_to feeds_path
     else
-      flash[:alert] = 'Feed url is not valid.'
-      redirect_to
+      flash[:alert] = 'Feed url is not valid!'
+      redirect_to feeds_path
     end
   end
+
+  private
+    def feed_params
+      params.require(:feed).permit(:url)
+    end
 end

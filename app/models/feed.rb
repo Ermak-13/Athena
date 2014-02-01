@@ -1,8 +1,17 @@
 class Feed < ActiveRecord::Base
   has_many :News
 
-  validates :title, presence: true
-  validates :url, url: true
+  validates :url, url: true, uniqueness: {case_sensitive: false}
+  validate :validate_feed_url
+
+  def fetch_attributes!
+    feed = Feedzirra::Feed.fetch_and_parse(self.url)
+
+    self.update(
+      title: feed.title,
+      description: feed.description,
+    )
+  end
 
   def fetch_and_parse!
     feed = Feedzirra::Feed.fetch_and_parse(self.url)
@@ -20,4 +29,12 @@ class Feed < ActiveRecord::Base
       )
     end
   end
+
+  private
+    def validate_feed_url
+      feed = Feedzirra::Feed.fetch_and_parse(self.url)
+      if feed.is_a? Fixnum
+        errors.add(:url, 'Feed url is not valid.')
+      end
+    end
 end
