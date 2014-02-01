@@ -4,7 +4,6 @@ class CreateFeeds < ActiveRecord::Migration
       t.string :title
       t.string :url, limit: 2000
       t.text :description
-      t.string :language
       t.datetime :last_modified_at
 
       t.timestamps

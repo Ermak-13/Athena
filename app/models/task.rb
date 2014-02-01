@@ -1,4 +1,7 @@
 class Task < ActiveRecord::Base
+  validates :worker_type, presence: true
+  validates :started_at, presence: true
+
   def self.build(worker)
     task = Task.create(
       worker_type: worker.name,

@@ -17,7 +17,6 @@ ActiveRecord::Schema.define(version: 20140130145256) do
     t.string   "title"
     t.string   "url",              limit: 2000
     t.text     "description"
-    t.string   "language"
     t.datetime "last_modified_at"
     t.datetime "created_at"
     t.datetime "updated_at"

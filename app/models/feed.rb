@@ -1,6 +1,9 @@
 class Feed < ActiveRecord::Base
   has_many :News
 
+  validates :title, presence: true
+  validates :url, url: true
+
   def fetch_and_parse!
     feed = Feedzirra::Feed.fetch_and_parse(self.url)
 
